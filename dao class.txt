@@ -1,0 +1,28 @@
+public List<DebitCardTransaction> getDebitTrans(int dys, BigInteger debitCardNumber) {
+		
+		
+		List<DebitCardTransaction> debitCardsList = new ArrayList();
+        LocalDateTime dLocalDateTime = LocalDateTime.now().minusDays(dys);
+		for (Entry<String, DebitCardTransaction> entry : debitCardTransactionDetails.entrySet()) {
+			if(entry.getValue().getDate().isAfter(dLocalDateTime))
+			 debitCardsList.add(entry.getValue());
+		}
+		
+		return debitCardsList;
+	}
+
+	@Override
+	public List<CreditCardTransaction> getCreditTrans(int days, BigInteger creditCardNumber) {
+		// TODO Auto-generated method stub
+		List<CreditCardTransaction> creditCardsList = new ArrayList();
+        LocalDateTime dLocalDateTime = LocalDateTime.now().minusDays(days);
+		for (Entry<String, CreditCardTransaction> entry : creditCardTransactionDetails.entrySet()) {
+			if(entry.getValue().getDate().isAfter(dLocalDateTime))
+			 creditCardsList.add(entry.getValue());
+		}
+		
+		return creditCardsList;
+	}
+	
+	
+	*******************DEFINE THESE SAME FUNCTIONS IN BOTH BANK DAO AND CUSTOMER DAO***********************************

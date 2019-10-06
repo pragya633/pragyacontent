@@ -1,0 +1,52 @@
+BankService bankService = new BankServiceClassImpl(); //add this in main
+case REQUEST_DEBIT_CARD_STATEMENT:
+							System.out.println("Enter your Debit Card Number: ");
+							  debitCardNumber=scan.nextBigInteger(); 
+							
+							  
+							  System.out.println("enter days : ");
+							  int days = scan.nextInt();
+							
+							  try {
+							  List<DebitCardTransaction> debitCardBeanTrns = customService.getDebitTrns(days,debitCardNumber);
+							  for (DebitCardTransaction debitCardTrns : debitCardBeanTrns) 
+							        System.out.println(debitCardTrns.toString());
+							  }
+							  
+							  catch(Exception e) {
+								  System.out.println("invalid date format or debit card does not exist");
+							  }
+								break;
+						case REQUEST_CREDIT_CARD_STATEMENT:
+							System.out.println("Enter your Credit Card Number: ");
+							  creditCardNumber=scan.nextBigInteger(); 
+							 System.out.println("enter days : ");
+							  days = scan.nextInt();
+							
+							  try {
+							  List<CreditCardTransaction> creditCardBeanTrans = customService.getCreditTrans(days,creditCardNumber);
+							  for (CreditCardTransaction creditCardTrans : creditCardBeanTrans) 
+							        System.out.println(creditCardTrans.toString());
+							  }
+							  
+							  catch(Exception e) {
+								  System.out.println("invalid date format or credit card does not exist");
+							  }
+							break;
+						case REPORT_DEBITCARD_STATEMENT_MISMATCH:
+							
+							String transactionId1;
+							System.out.println("Enter your transaction id");
+							transactionId1=scan.next();
+							customService.raiseDebitMismatchTicket(transactionId1);
+							break;
+						case REPORT_CREDITCARD_STATEMENT_MISMATCH:
+							String transactionId;
+							System.out.println("Enter your transaction id");
+							transactionId=scan.next();
+							customService.raiseCreditMismatchTicket(transactionId);
+							break;
+						case CUSTOMER_LOG_OUT:
+							System.out.println("LOGGED OUT");
+							break;
+						}

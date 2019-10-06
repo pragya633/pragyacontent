@@ -1,0 +1,38 @@
+public List<DebitCardTransaction> getDebitTrns(int dys, BigInteger debitCardNumber) {
+		boolean check = customerDao.verifyDebitCardNumber(debitCardNumber);
+		if (check){
+		    if(dys>=1) {
+			    
+		    	return customerDao.getDebitTrans(dys, debitCardNumber);
+		    }
+		    else {
+		    	System.out.println("invalid days format");
+		    	return null;
+		    }
+		
+	    }
+		else {
+			System.out.println("debit card does not exist");
+		return null;
+	   }
+	}
+
+	@Override
+	public List<CreditCardTransaction> getCreditTrans(int days, BigInteger creditCardNumber) {
+		// TODO Auto-generated method stub
+		boolean check = customerDao.verifyCreditCardNumber(creditCardNumber);
+		if (check){
+		    if(days>=1) {
+			    
+		    	return customerDao.getCreditTrans(days, creditCardNumber);
+		    }
+		    else {
+		    	System.out.println("invalid days format");
+		    	return null;
+		    }
+		
+	    }
+		else {
+			System.out.println("credit card does not exist");
+		return null;
+	   }
