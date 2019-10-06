@@ -1,0 +1,133 @@
+public void requestCreditCardUpgrade(BigInteger creditCardNumber,int myChoice) {
+		// TODO Auto-generated method stub
+
+		caseIdObj.setCardNumber(creditCardNumber);
+		caseIdGenOne = "RCCU";
+		timestamp = LocalDateTime.now();
+
+		caseIdObj.setCaseIdTotal(addToQueryTable(caseIdGenOne));
+		caseIdObj.setCaseTimeStamp(timestamp);
+		caseIdObj.setStatusOfQuery("Pending");
+		caseIdObj.setUCI(customObj.getUCI());
+		if (myChoice == 1) {
+			caseIdObj.setDefineQuery("Upgrade to Gold");
+			customerDao.requestCreditCardUpgrade(caseIdObj, creditCardNumber);
+		} else if (myChoice == 2) {
+			caseIdObj.setDefineQuery("Upgrade to Platinum");
+			customerDao.requestCreditCardUpgrade(caseIdObj, creditCardNumber);
+		} else {
+			System.out.println("Choose a valid option");
+		}
+
+	}
+
+	@Override
+	public String verifyCreditcardType(BigInteger creditCardNumber) {
+		boolean check = customerDao.verifyCreditCardNumber(creditCardNumber);
+		if (check) {
+			String type = customerDao.getCreditCardType(creditCardNumber);
+			return type;
+		} else {
+			System.out.println("INVALID CREDIT CARD NUMBER");
+			return null;
+		}
+
+	}
+
+
+
+	@Override
+	public void raiseCreditMismatchTicket(String transactionId) {
+		// TODO Auto-generated method stub
+		boolean transactionResult = customerDao.verifyTransactionId(transactionId);
+		if (transactionResult) {
+
+			caseIdGenOne = "RCMT";
+
+			timestamp = LocalDateTime.now();
+
+			caseIdObj.setCaseIdTotal(addToQueryTable(caseIdGenOne));
+			caseIdObj.setCaseTimeStamp(timestamp);
+			caseIdObj.setStatusOfQuery("Pending");
+			caseIdObj.setUCI(caseIdObj.getUCI());
+			caseIdObj.setAccountNumber(caseIdObj.getAccountNumber());
+
+			customerDao.raiseCreditMismatchTicket(caseIdObj, transactionId);
+		} else {
+			System.out.println("INVALID TRANSACTION ID");
+
+		}
+		
+	}
+	
+	public List<DebitCardTransaction> getDebitTrns(int dys, BigInteger debitCardNumber) {
+		boolean check = customerDao.verifyDebitCardNumber(debitCardNumber);
+		if (check){
+		    if(dys>=1) {
+			    
+		    	return customerDao.getDebitTrans(dys, debitCardNumber);
+		    }
+		    else {
+		    	System.out.println("invlid dys formt");
+		    	return null;
+		    }
+		
+	    }
+		else {
+			System.out.println("debit crd does not exist");
+		return null;
+	   }
+	}
+
+}
+
+
+//dao class
+public String getCreditCardType(BigInteger creditCardNumber) {
+		// TODO Auto-generated method stub
+		String type = creditCardDetails.get(creditCardNumber).getCreditCardType();
+		return type;
+	}
+
+	@Override
+	public boolean verifyTransactionId(String transactionId) {
+		// TODO Auto-generated method stub
+		result = debitCardTransactionDetails.containsKey(transactionId);
+		return result;
+	}
+
+	@Override
+	public void raiseDebitMismatchTicket(CaseIdBean caseIdObj,String transactionId) {
+		// TODO Auto-generated method stub
+		queryDetails.put(caseIdObj.getCaseIdTotal(), caseIdObj);
+		System.out.println("TICKET RAISED SUCCESSFULLY");
+		
+		
+	}
+
+	@Override
+	public void raiseCreditMismatchTicket(CaseIdBean caseIdObj, String transactionId) {
+		// TODO Auto-generated method stub
+		queryDetails.put(caseIdObj.getCaseIdTotal(), caseIdObj);
+		System.out.println("TICKET RAISED SUCCESSFULLY");
+		
+	}
+	
+	public List<DebitCardTransaction> getDebitTrans(int dys, BigInteger debitCardNumber) {
+		
+		
+		List<DebitCardTransaction> debitCardsList = new ArrayList();
+        LocalDateTime dLocalDateTime = LocalDateTime.now().minusDays(dys);
+		for (Entry<String, DebitCardTransaction> entry : debitCardTransactionDetails.entrySet()) {
+			if(entry.getValue().getDate().isAfter(dLocalDateTime))
+			 debitCardsList.add(entry.getValue());
+		}
+		
+		return debitCardsList;
+	}
+	
+	
+	
+	
+
+}
